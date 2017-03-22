@@ -133,6 +133,9 @@ include_directories(
 add_library(event src/Event.cpp)
 target_link_libraries(event ${roscpp_LIBRARIES})
 
+add_library(laser src/Laser.cpp)
+target_link_libraries(laser ${roscpp_LIBRARIES})
+
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
@@ -141,6 +144,10 @@ target_link_libraries(event ${roscpp_LIBRARIES})
 add_executable(control_node src/control_node.cpp src/Event.cpp)
 target_link_libraries(control_node ${catkin_LIBRARIES})
 add_dependencies(control_node mas_ros_hackathon_generate_messages_cpp)
+
+add_executable(laser_node src/laser_node.cpp src/Laser.cpp)
+target_link_libraries(laser_node ${catkin_LIBRARIES})
+add_dependencies(laser_node mas_ros_hackathon_generate_messages_cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
