@@ -6,6 +6,6 @@
   </include>
 
 
- <node pkg="mas_ros_hackathon" type="laser_node" name="laser_node"/>
+ <node pkg="mas_ros_hackathon" type="laser_node" name="laser_node" output="screen"/>
 
 </launch>

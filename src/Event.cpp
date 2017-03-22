@@ -2,7 +2,7 @@
 
 Event::Event(ros::NodeHandle n)
 {
-
+  event_on = 0;
 }
 
 bool Event::event_in_callback(mas_ros_hackathon::event_in::Request &req, mas_ros_hackathon::event_in::Response &res)
@@ -14,12 +14,14 @@ bool Event::event_in_callback(mas_ros_hackathon::event_in::Request &req, mas_ros
   {
     event_on = 1;
     event_status = 0;
+    input = 0;
     ROS_INFO("Event turned ON");
   }
   else if(!strcmp(event_in_cmd, "e_stop"))
   {
     event_on = 0;
     event_status = 0;
+    input = 0;
     ROS_INFO("Event turned OFF");
   }
   else
@@ -105,7 +107,6 @@ void Event::odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
   }
   else if(event_on & event_status == 2)
   {
-    // ROS_INFO("Event completed");
     input = 0;
   } 
 }

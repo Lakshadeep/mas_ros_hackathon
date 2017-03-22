@@ -3,9 +3,9 @@
 
   <rosparam file="$(find mas_ros_hackathon)/config/config.yaml" command="load" />
   <include file="$(find youbot_gazebo_robot)/launch/youbot.launch">
- </include>
+  </include>
 
 
- <node pkg="mas_ros_hackathon" type="control_node" name="control_node"/>
+ <node pkg="mas_ros_hackathon" type="control_node" name="control_node" output="screen" />
 
 </launch>
