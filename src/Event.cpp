@@ -5,6 +5,7 @@ Event::Event(ros::NodeHandle n)
   event_on = 0;
 }
 
+//callback function for event_in service
 bool Event::event_in_callback(mas_ros_hackathon::event_in::Request &req, mas_ros_hackathon::event_in::Response &res)
 {
   char *event_in_cmd = (char*)malloc(sizeof(char) *100);
@@ -31,11 +32,14 @@ bool Event::event_in_callback(mas_ros_hackathon::event_in::Request &req, mas_ros
   return true;
 }
 
-
+// callback function for messages published on odom topic
 void Event::odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
 {
   if(event_on & event_status == 1)
   {
+    // State 2
+    // Checks if robot has travelled specified distance
+
     curr_time = ros::Time::now().toSec();
     double time_diff = curr_time - start_time;
     if(time_diff > timeout)
@@ -86,6 +90,9 @@ void Event::odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
   }
   else if(event_on & event_status == 0)
   {
+    // State 1
+    // Saves the starting position of robot and initialise the state machine
+
     double x = msg->pose.pose.position.x;
     double y = msg->pose.pose.position.y;
     double theta = msg->pose.pose.orientation.z;
@@ -107,10 +114,13 @@ void Event::odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
   }
   else if(event_on & event_status == 2)
   {
+    // State 3
+    // Goal achieved !
     input = 0;
   } 
 }
 
+// callback for input service
 bool Event::input_callback(mas_ros_hackathon::input::Request &req, mas_ros_hackathon::input::Response &res)
 {
   char *input_cmd = (char*)malloc(sizeof(char) *100);
@@ -139,7 +149,7 @@ bool Event::input_callback(mas_ros_hackathon::input::Request &req, mas_ros_hacka
   return true;
 }
 
-
+// publishes specified velocities on /cmd_vel topic
 void Event::publish_cmd_vel(double x_vel_t, double y_vel_t, double angular_vel_t)
 {
   geometry_msgs::Twist vel_msg;
@@ -149,6 +159,7 @@ void Event::publish_cmd_vel(double x_vel_t, double y_vel_t, double angular_vel_t
   velocity_publisher.publish(vel_msg);
 }
 
+// converts quaternion angles to roll, pitch, yaw
 void Event::convert_to_rpy(double orientation_x, double orientation_y, double orientation_z, double orientation_w)
 {
   tf::Quaternion q(orientation_x, orientation_y, orientation_z, orientation_w);
