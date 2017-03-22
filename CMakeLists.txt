@@ -115,7 +115,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
@@ -130,12 +130,15 @@ include_directories(
 ## either from message generation or dynamic reconfigure
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_library(event src/Event.cpp)
+target_link_libraries(event ${roscpp_LIBRARIES})
+
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/mas_ros_hackathon_node.cpp)
 
-add_executable(control_node src/control_node.cpp)
+add_executable(control_node src/control_node.cpp src/Event.cpp)
 target_link_libraries(control_node ${catkin_LIBRARIES})
 add_dependencies(control_node mas_ros_hackathon_generate_messages_cpp)
 
