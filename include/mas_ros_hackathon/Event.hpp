@@ -12,6 +12,7 @@
 
 class Event {
 public:
+  double distance, x_vel, y_vel, ang_vel;
   ros::ServiceServer event_in_server; 
   ros::ServiceServer input_server;
   ros::Subscriber odom_subscriber;

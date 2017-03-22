@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
- <include file="$(find youbot_gazebo_robot)/launch/youbot.launch">
+  <rosparam file="$(find mas_ros_hackathon)/config/config.yaml" command="load" />
+  <include file="$(find youbot_gazebo_robot)/launch/youbot.launch">
 <!--    <arg name="world" value="octopus"/>
    <arg name="map" value="true"/> -->
  </include>
+
 
  <node pkg="mas_ros_hackathon" type="control_node" name="control_node"/>
 

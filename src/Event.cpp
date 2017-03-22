@@ -63,7 +63,7 @@ void Event::odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
 
       double dist = sqrt(pow(x_diff,2) + pow(y_diff,2));
 
-      if(dist > 1.0)
+      if(dist > distance)
       {
         publish_cmd_vel(0,0,0);
         event_status = 2;
@@ -75,9 +75,9 @@ void Event::odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
       else
       {
         if(input == 1)
-          publish_cmd_vel(0,0.1,0);
+          publish_cmd_vel(0,y_vel,0);
         else if(input == 2)
-          publish_cmd_vel(0,-0.1,0);
+          publish_cmd_vel(0,-y_vel,0);
         
       }
     }
@@ -139,12 +139,12 @@ bool Event::input_callback(mas_ros_hackathon::input::Request &req, mas_ros_hacka
 }
 
 
-void Event::publish_cmd_vel(double x_vel, double y_vel, double angular_vel)
+void Event::publish_cmd_vel(double x_vel_t, double y_vel_t, double angular_vel_t)
 {
   geometry_msgs::Twist vel_msg;
-  vel_msg.linear.x = x_vel;
-  vel_msg.linear.y = y_vel;
-  vel_msg.angular.z = angular_vel;
+  vel_msg.linear.x = x_vel_t;
+  vel_msg.linear.y = y_vel_t;
+  vel_msg.angular.z = angular_vel_t;
   velocity_publisher.publish(vel_msg);
 }
 
