@@ -3,6 +3,7 @@
 #include "nav_msgs/Odometry.h"
 #include "mas_ros_hackathon/event_in.h"
 #include "mas_ros_hackathon/input.h"
+#include "mas_ros_hackathon/event_out.h"
 #include "geometry_msgs/Twist.h"
 #include "string.h"
 #include <cmath> 
@@ -12,7 +13,7 @@
 int event_on = 0;
 int input = 0;   // 1 - right | 2 - left
 int event_status = 0;   // 0 - Idle | 1 - executing | 2 - Completed
-ros::Publisher velocity_publisher;
+ros::Publisher velocity_publisher, status_publisher;
 double start_x, start_y, start_heading;
 double start_time, timeout = 30, curr_time;
 
@@ -54,6 +55,10 @@ void odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
       vel_msg.linear.y = 0.0;
       vel_msg.angular.z = 0.0;
       velocity_publisher.publish(vel_msg);
+
+      mas_ros_hackathon::event_out event_out_msg;
+      event_out_msg.status = "e_failed";
+      status_publisher.publish(event_out_msg);
     }
     else
     {
@@ -84,6 +89,9 @@ void odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
         vel_msg.angular.z = 0.0;
         event_status = 2;
         ROS_INFO("Final position: X:%f|Y:%f|Heading:%f ", x, y, yaw);
+        mas_ros_hackathon::event_out event_out_msg;
+        event_out_msg.status = "e_success";
+        status_publisher.publish(event_out_msg);
       }
       else
       {
@@ -175,6 +183,7 @@ int main(int argc, char *argv[])
   odom_subscriber = n.subscribe("/odom", 1000, odom_callback);
 
   velocity_publisher = n.advertise<geometry_msgs::Twist>("/cmd_vel", 3);
+  status_publisher = n.advertise<mas_ros_hackathon::event_out>("/event_out", 3);
 
   ros::spin();
 
