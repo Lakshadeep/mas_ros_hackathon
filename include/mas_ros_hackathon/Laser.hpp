@@ -9,14 +9,16 @@
 
 class Laser {
 public:
-  ros::Subscriber laser_scan_subscriber;
+  ros::Subscriber laser_scan_subscriber_front, laser_scan_subscriber_back;
   ros::Publisher velocity_publisher;
   ros::Subscriber odom_subscriber;
   Laser(ros::NodeHandle n);
-  double range_set1[10], range_set2[10], range_set3[10], range_set4[10], range_set5[10], range_set6[10], range_set7[10]; 
-  double set_avg[7];
+  double f_range_set1[10], f_range_set2[10], f_range_set3[10], f_range_set4[10], f_range_set5[10], f_range_set6[10], f_range_set7[10]; 
+  double b_range_set1[10], b_range_set2[10], b_range_set3[10], b_range_set4[10], b_range_set5[10], b_range_set6[10], b_range_set7[10]; 
+  double front_set_avg[7], back_set_avg[7];
   double safe_distance, x_vel;
-  void laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
+  void front_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
+  void back_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
   double calculate_avg(const float *range,int length);
   bool detect_obstacle(double set_avg[7], double safe_distance);
   void publish_cmd_vel(double x_vel_t, double y_vel_t, double angular_vel_t);

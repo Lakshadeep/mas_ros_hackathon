@@ -6,18 +6,33 @@ Laser::Laser(ros::NodeHandle n)
 }
 
 // callback function for messages published on /base_scan topic
-void Laser::laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
+void Laser::front_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
   int start = 40;
   double safe_distance = 0.2;
   for(int i = 0; i < 7; i++)
   {
-    set_avg[i] = calculate_avg(&msg->ranges[start + (i*10)],10);
+    front_set_avg[i] = calculate_avg(&msg->ranges[start + (i*10)],10);
   }
 
-  if(detect_obstacle(set_avg, safe_distance))
+  if(detect_obstacle(front_set_avg, safe_distance))
   {
     publish_cmd_vel(-0.1, 0.0, 0.0);
+  }
+}
+
+void Laser::back_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
+{
+  int start = 40;
+  double safe_distance = 0.2;
+  for(int i = 0; i < 7; i++)
+  {
+    back_set_avg[i] = calculate_avg(&msg->ranges[start + (i*10)],10);
+  }
+
+  if(detect_obstacle(back_set_avg, safe_distance))
+  {
+    publish_cmd_vel(0.1, 0.0, 0.0);
   }
 }
 
