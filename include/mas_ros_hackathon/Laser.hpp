@@ -13,10 +13,9 @@ public:
   ros::Publisher velocity_publisher;
   ros::Subscriber odom_subscriber;
   Laser(ros::NodeHandle n);
-  double f_range_set1[10], f_range_set2[10], f_range_set3[10], f_range_set4[10], f_range_set5[10], f_range_set6[10], f_range_set7[10]; 
-  double b_range_set1[10], b_range_set2[10], b_range_set3[10], b_range_set4[10], b_range_set5[10], b_range_set6[10], b_range_set7[10]; 
-  double front_set_avg[7], back_set_avg[7];
+  double front_set_avg[30], back_set_avg[30];
   double safe_distance, x_vel;
+  int safe_mode;
   void front_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
   void back_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
   double calculate_avg(const float *range,int length);

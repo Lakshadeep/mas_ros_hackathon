@@ -2,37 +2,43 @@
 
 Laser::Laser(ros::NodeHandle n)
 {
-
+  safe_mode = 0;
 }
 
 // callback function for messages published on /base_scan topic
 void Laser::front_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-  int start = 40;
-  double safe_distance = 0.2;
-  for(int i = 0; i < 7; i++)
+  int start = 105;  // 105 for bot | 40 for simulation
+  int spacing = 10; // 10 for bot | 2 for simulation
+
+  for(int i = 0; i < 30; i++)
   {
-    front_set_avg[i] = calculate_avg(&msg->ranges[start + (i*10)],10);
+    front_set_avg[i] = calculate_avg(&msg->ranges[start + (i*spacing)],spacing);
   }
 
   if(detect_obstacle(front_set_avg, safe_distance))
   {
-    publish_cmd_vel(-0.1, 0.0, 0.0);
+    ROS_WARN("Obstacle detected by front scannar");
+    publish_cmd_vel(-x_vel, 0.0, 0.0);
+    safe_mode = 1;
   }
 }
 
 void Laser::back_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-  int start = 40;
-  double safe_distance = 0.2;
-  for(int i = 0; i < 7; i++)
+  int start = 105;  // 105 for bot | 40 for simulation
+  int spacing = 10; // 10 for bot | 2 for simulation
+
+  for(int i = 0; i < 30; i++)
   {
-    back_set_avg[i] = calculate_avg(&msg->ranges[start + (i*10)],10);
+    back_set_avg[i] = calculate_avg(&msg->ranges[start + (i*spacing)],spacing);
   }
 
   if(detect_obstacle(back_set_avg, safe_distance))
   {
-    publish_cmd_vel(0.1, 0.0, 0.0);
+    ROS_WARN("Obstacle detected by back scannar");    
+    publish_cmd_vel(x_vel, 0.0, 0.0);
+    safe_mode = 1;
   }
 }
 
@@ -44,16 +50,18 @@ double Laser::calculate_avg(const float *range,int length)
   {
     average = average + *(range + i);
   }
-  return average/10.0;
+  return average/length;
 }
 
 // detects obstacle using given range set
-bool Laser::detect_obstacle(double set_avg[7], double safe_distance)
+bool Laser::detect_obstacle(double set_avg[30], double safe_distance)
 {
-  if(set_avg[0] < safe_distance || set_avg[1] < safe_distance || set_avg[2] < safe_distance || set_avg[3] < safe_distance || set_avg[4] < safe_distance || set_avg[5] < safe_distance || set_avg[6] < safe_distance)
+  for(int i = 0; i < 30; i++)
   {
-    ROS_WARN("Obstacle detected !!");
-    return true;
+    if(set_avg[i] < safe_distance)
+    {
+      return true;
+    }
   }
   return false;
 }

@@ -2,4 +2,5 @@ distance: 0.5
 x_vel: 0.1
 y_vel: 0.1
 ang_vel: 0.1
-safe_distance: 0.2
+safe_distance: 0.15
+timeout: 2
