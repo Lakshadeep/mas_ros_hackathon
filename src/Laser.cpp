@@ -11,9 +11,11 @@ void Laser::front_laser_scan_callback(const sensor_msgs::LaserScan::ConstPtr& ms
   int start = 105;  // 105 for bot | 40 for simulation
   int spacing = 10; // 10 for bot | 2 for simulation
 
+  // ROS_WARN("Debug front");
   for(int i = 0; i < 30; i++)
   {
     front_set_avg[i] = calculate_avg(&msg->ranges[start + (i*spacing)],spacing);
+    ROS_WARN("Avd scan front: %f", front_set_avg[i] );
   }
 
   if(detect_obstacle(front_set_avg, safe_distance))

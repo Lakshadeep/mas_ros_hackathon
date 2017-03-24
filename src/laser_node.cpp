@@ -16,10 +16,10 @@ int main(int argc, char *argv[])
   ros::param::getCached("timeout", timeout);
 
   // initialise the laser scanner subscriber
-  // laser_obj.laser_scan_subscriber_front = n.subscribe("/scan_front", 1000, &Laser::front_laser_scan_callback, &laser_obj);
-  laser_obj.laser_scan_subscriber_front = n.subscribe("/base_scan", 1000, &Laser::front_laser_scan_callback, &laser_obj);
-  // laser_obj.laser_scan_subscriber_back = n.subscribe("/scan_rear", 1000, &Laser::back_laser_scan_callback, &laser_obj);
-  laser_obj.laser_scan_subscriber_back = n.subscribe("/base_scan_back", 1000, &Laser::back_laser_scan_callback, &laser_obj);
+  laser_obj.laser_scan_subscriber_front = n.subscribe("/scan_front", 1000, &Laser::front_laser_scan_callback, &laser_obj);
+  // laser_obj.laser_scan_subscriber_front = n.subscribe("/base_scan", 1000, &Laser::front_laser_scan_callback, &laser_obj);
+  laser_obj.laser_scan_subscriber_back = n.subscribe("/scan_rear", 1000, &Laser::back_laser_scan_callback, &laser_obj);
+  // laser_obj.laser_scan_subscriber_back = n.subscribe("/base_scan_back", 1000, &Laser::back_laser_scan_callback, &laser_obj);
   
   // initialise the /cmd_vel publisher
   laser_obj.velocity_publisher = n.advertise<geometry_msgs::Twist>("/cmd_vel", 3);
