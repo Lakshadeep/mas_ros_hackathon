@@ -1,4 +1,4 @@
-distance: 0.5
+distance: 0.2
 x_vel: 0.1
 y_vel: 0.1
 ang_vel: 0.1
